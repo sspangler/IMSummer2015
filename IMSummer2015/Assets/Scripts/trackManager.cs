@@ -16,6 +16,9 @@ public class trackManager : MonoBehaviour {
 	Vector3 hoverPlaneEulers;
 	GameObject hoverPlaneRef;
 	float zoomSpeed = 100f;
+	int selectedExtraParam = 0;
+	int selectedPartParams = 0;
+	bool editor = true;
 
 	// Use this for initialization
 	void Awake () {
@@ -36,10 +39,17 @@ public class trackManager : MonoBehaviour {
 	{
 		if(racing)
 		{
+			string editorCameraSettings = "";
+			if(editor)
+				editorCameraSettings = racingCamera.GetComponent<skaterCamera>().dataToString();
 			string[] racingArray = new string[]{"A/D - Strafe",
-				"Mouse1 - gas",
 				"R - Reset to start",
-				"T - Switch between racer/editor"};
+				"T - Switch between racer/editor",
+				"Camera Settings: '7/Y', '8/U', '9,I',",
+				"'0/O', '-/P', '=/['",
+				"Camera Settings: 'Angle',",
+				"'translate x,y,z', 'rotation x,y'",
+				editorCameraSettings};
 
 			var lapTimes = GetComponent<lapTimer>().lapTimes;
 			for(int x=0;x<lapTimes.Length;x++)
@@ -145,6 +155,18 @@ public class trackManager : MonoBehaviour {
 				{
 					partNumbers[currentPart] = -partNumbers[currentPart];
 					generateTrack();
+				}
+				else if(Input.GetKeyDown (KeyCode.DownArrow))
+				{
+					selectedExtraParam += 1;
+					if(selectedExtraParam>=selectedPartParams)
+						selectedExtraParam = 0;
+				}
+				else if(Input.GetKeyDown (KeyCode.UpArrow))
+				{
+					selectedExtraParam += -1;
+					if(selectedExtraParam<0)
+						selectedExtraParam = selectedPartParams - 1;
 				}
 				/*else if(Input.GetKeyDown (KeyCode.Comma))
 				{
@@ -366,11 +388,22 @@ public class trackManager : MonoBehaviour {
 		}
 	}
 
+	Vector3 returnProperties(int partNo, int paramNo)
+	{
+		return
+			GameObject.Find("TrackManager").GetComponent<trackPartPool>().
+				pool[partNo].GetComponent<extraParams>().properties[paramNo];
+	}
+
 	int countCurrentParameters(int partIndex)
 	{
+		int count = 0;
 		for(int x=0;x<partParameters.Length;x++)
 		{
-
+			if((int) partParameters[x].x==partIndex)
+				count += 1;
 		}
+		
+		return count;
 	}
 }
