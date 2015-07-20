@@ -6,6 +6,8 @@ public class skater : MonoBehaviour {
 	public float forwardspeed;
 	public float speed;
 	public GameObject head;
+	public float score;
+	public float scoreMultiplier;
 
 	Vector3 startPos;
 
@@ -18,15 +20,7 @@ public class skater : MonoBehaviour {
 	void Update () {
 		//move forward
 		transform.Translate(Vector3.forward * forwardspeed * Time.deltaTime);
-		RaycastHit hit;
-		Ray ray = new Ray(head.transform.position, -Vector3.up);
-
-		//if something under the player
-		if (Physics.Raycast(ray, out hit)) 
-		{
-
-		}
-		
+		score += Time.deltaTime * scoreMultiplier;
 		
 		if (Input.GetKey (KeyCode.A)) {
 			transform.Translate(Vector3.left * speed * Time.deltaTime);
