@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEditor;
+/*using UnityEditor;
 
 [CustomEditor(typeof(spriteCamera))]
 public class spriteCameraEditor_editor : Editor
@@ -15,4 +15,4 @@ public class spriteCameraEditor_editor : Editor
 			myScript.faceCamera();
 		}
 	}
-}
+}*/
