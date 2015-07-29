@@ -11,7 +11,7 @@ public class trackManager : MonoBehaviour {
 	public GameObject[] trackParts;
 	public Vector3 cameraDirection;
 	public float currentCameraDistance = 100f;
-	public Vector3[] partParameters; // (Part Index, Part No, which parameter)
+	public Vector4[] partParameters; // (Part Index, Part No, which parameter, value)
 	Vector3 hoverPlanePosition;
 	Vector3 hoverPlaneEulers;
 	GameObject hoverPlaneRef;
@@ -19,10 +19,20 @@ public class trackManager : MonoBehaviour {
 	int selectedExtraParam = 0;
 	int selectedPartParams = 0;
 	bool editor = true;
+	public Vector4[] paramReferences; // {(min, max, inc, reference (partParameters index))}
+
+	public string partName = "NameText";
+	public int partMinDifficulty = 0;
+	public int partMaxDifficulty = 1;
+	public string partSegmentNumber = "0";
+	usave_file usaveRef;
 
 	// Use this for initialization
 	void Awake () {
-		partParameters = new Vector3[0];
+		if (GetComponent<usave_file> ())
+			usaveRef = GetComponent<usave_file> ();
+		partParameters = new Vector4[0];
+		paramReferences = new Vector4[0];
 		hoverPlaneRef = GameObject.Find ("Skater");
 		hoverPlaneRef.SetActive (false);
 		partNumbers = new int[1];
@@ -60,6 +70,158 @@ public class trackManager : MonoBehaviour {
 		}
 		else
 		{
+			// Draw segment buttons
+			/* Save new 32 78 , 42 83
+			 * Save as 32 84 , 42 89
+			 * Name 43 78 , 57 83
+			 * No 43 84 , 57 89
+			 * Load 58 78 , 68 83
+			 * Next 58 84 , 68 87
+			 * Prev 58 88 , 68 91
+			 */
+			Rect a;
+			a = rectGroup(1, 32, 78, 42, 83)[0];
+			if(GUI.Button(a, "Save New"))
+			{
+				int saveNo = 0;
+				trackSegmentPool.segment s = new trackSegmentPool.segment();
+				while(true)
+				{
+					saveNo = Random.Range(0, 1000000);
+					if(!usaveRef.ifSlot(saveNo))
+						break;
+				}
+				partSegmentNumber = saveNo.ToString();
+				usaveRef.slot = saveNo;
+				usaveRef.allResize(0);
+				usaveRef.iarray = partNumbers;
+				usaveRef.farray = s.vectorToFloatArray(partParameters);
+				usaveRef.varray = new Vector3[1];
+				usaveRef.varray[0] = new Vector3((float) partMinDifficulty, (float) partMaxDifficulty, 0f);
+				usaveRef.sarray = new string[1];
+				usaveRef.sarray[0] = partName;
+				usaveRef.saveFile();
+			}
+			a = rectGroup(1, 32, 84, 42, 89)[0];
+			if(GUI.Button(a, "Save as#"))
+			{
+				int saveNo = int.Parse(partSegmentNumber);
+				trackSegmentPool.segment s = new trackSegmentPool.segment();
+				if(saveNo>=0 && saveNo < 1000000)
+				{
+					usaveRef.slot = saveNo;
+					usaveRef.allResize(0);
+					usaveRef.iarray = partNumbers;
+					usaveRef.farray = s.vectorToFloatArray(partParameters);
+					usaveRef.varray = new Vector3[1];
+					usaveRef.varray[0] = new Vector3((float) partMinDifficulty, (float) partMaxDifficulty, 0f);
+					usaveRef.sarray = new string[1];
+					usaveRef.sarray[0] = partName;
+					usaveRef.saveFile();
+				}
+			}
+			a = rectGroup(1, 43, 78, 57, 83)[0];
+			partName = GUI.TextField(a, partName);
+			a = rectGroup(1, 43, 84, 57, 89)[0];
+			partSegmentNumber = GUI.TextField(a, partSegmentNumber);
+			a = rectGroup(1, 58, 78, 68, 83)[0];
+			if(GUI.Button(a, "Load"))
+			{
+				int saveNo = int.Parse(partSegmentNumber);
+				load(saveNo);
+			}
+			a = rectGroup(1, 58, 84, 68, 87)[0];
+			if(GUI.Button(a, "Next"))
+			{
+				int saveNo = int.Parse(partSegmentNumber) + 1;
+				bool foundSegment = false;
+				for(int x=saveNo;x<1000000;x++)
+				{
+					if(usaveRef.ifSlot(x))
+					{
+						load (x);
+						foundSegment = true;
+						break;
+					}
+				}
+				if(!foundSegment)
+				{
+					for(int x=0;x<saveNo;x++)
+					{
+						if(usaveRef.ifSlot(x))
+						{
+							load (x);
+							foundSegment = true;
+							break;
+						}
+					}
+				}
+			}
+			a = rectGroup(1, 58, 88, 68, 91)[0];
+			if(GUI.Button(a, "Prev"))
+			{
+				int saveNo = int.Parse(partSegmentNumber) - 1;
+				bool foundSegment = false;
+				for(int x=saveNo;x>=0;x--)
+				{
+					if(usaveRef.ifSlot(x))
+					{
+						load (x);
+						foundSegment = true;
+						break;
+					}
+				}
+				if(!foundSegment)
+				{
+					for(int x=1000000;x>saveNo;x--)
+					{
+						if(usaveRef.ifSlot(x))
+						{
+							load (x);
+							foundSegment = true;
+							break;
+						}
+					}
+				}
+			}
+			/* Min+ 36 71 , 41 74
+			 * Min- 36 74 , 41 77
+			 * Max+ 59 71 , 64 74
+			 * Max- 59 74 , 64 77
+			 */
+			a = rectGroup(1, 36, 71, 41, 74)[0];
+			if(GUI.Button(a, "Min+"))
+			{
+				if(partMinDifficulty+1<partMaxDifficulty)
+					partMinDifficulty += 1;
+			}
+			a = rectGroup(1, 36, 74, 41, 77)[0];
+			if(GUI.Button(a, "Min-"))
+			{
+				if(partMinDifficulty>0)
+					partMinDifficulty += -1;
+			}
+			a = rectGroup(1, 59, 71, 64, 74)[0];
+			if(GUI.Button(a, "Max+"))
+			{
+				partMaxDifficulty += 1;
+			}
+			a = rectGroup(1, 59, 74, 64, 77)[0];
+			if(GUI.Button(a, "Max-"))
+			{
+				if(partMaxDifficulty>(partMinDifficulty+1))
+					partMaxDifficulty += -1;
+			}
+
+			// Draw parameter sliders
+			if(selectedPartParams>0)
+			{
+				Rect[] rectArray = rectGroup(selectedPartParams, 80, 10, 96, 90, 20);
+				for(int x=0;x<rectArray.Length;x++)
+				{
+					partParameters[(int)paramReferences[x].w].w = GUI.HorizontalSlider(rectArray[x], partParameters[(int)paramReferences[x].w].w, paramReferences[x].x, paramReferences[x].y);
+				}
+			}
 			GUITextList(12, Color.black,  new string[]{"Current(" + GetComponent<trackPartPool>().returnNewPartNumber(partNumbers[currentPart], 0) + "): " + trackParts[currentPart].GetComponent<trackPartData>().name,
 										"W - Change part",
 			                            "S - Change part",
@@ -125,7 +287,7 @@ public class trackManager : MonoBehaviour {
 					{
 						addPart();
 					}
-
+					resetParameterSelect();
 				}
 				else if(Input.GetKeyDown (KeyCode.D)) // Previous piece
 				{
@@ -134,22 +296,24 @@ public class trackManager : MonoBehaviour {
 						trackParts[currentPart].GetComponent<trackPartData>().setHighlight(false);
 						currentPart += -1;
 					}
+					resetParameterSelect();
 				}
 				else if(Input.GetKeyDown (KeyCode.W)) // Change piece, up
 				{
 					changePart(1);
-
+					resetParameterSelect();
 					generateTrack();
 				}
 				else if(Input.GetKeyDown (KeyCode.S)) // Change piece, down
 				{
 					changePart(-1);
-
+					resetParameterSelect();
 					generateTrack();
 				}
 				else if(Input.GetKeyDown (KeyCode.Backspace))
 				{
 					subtractPart(currentPart);
+					resetParameterSelect();
 				}
 				else if(Input.GetKeyDown (KeyCode.F))
 				{
@@ -337,16 +501,16 @@ public class trackManager : MonoBehaviour {
 		// parameter = (partindex, partno, value)
 		for(int x=0;x<parameterCount;x++)
 		{
-			newParam = new Vector3(index, partNo, GetComponent<trackPartPool>().pool[partNo].GetComponent<extraParams>().properties[x].x);
+			newParam = new Vector4(index, partNo, x, GetComponent<trackPartPool>().returnPart(partNo).GetComponent<extraParams>().properties[x].x);
 			insertParameter(newParam);
 		}
 	}
 
 	void subParameters(int partIndex, bool collapseNumbers = false)
 	{
-		for(int x=0;x<partParameters.Length;x++)
+		for(int x=partParameters.Length-1;x>=0;x--)
 		{
-			if(partParameters[x].x==partIndex)
+			if((int) partParameters[x].x==partIndex)
 			{
 				removeParameter(x);
 			}
@@ -354,7 +518,7 @@ public class trackManager : MonoBehaviour {
 
 		if(collapseNumbers)
 		{
-			for(int x=0;x<partParameters.Length;x++)
+			for(int x=partParameters.Length-1;x>=0;x--)
 			{
 				if(partParameters[x].x>partIndex)
 					partParameters[x].x += -1;
@@ -362,10 +526,10 @@ public class trackManager : MonoBehaviour {
 		}
 	}
 
-	void insertParameter(Vector3 newParam)
+	void insertParameter(Vector4 newParam)
 	{
-		Vector3[] oldParameters = partParameters;
-		partParameters = new Vector3[oldParameters.Length+1];
+		Vector4[] oldParameters = partParameters;
+		partParameters = new Vector4[oldParameters.Length+1];
 
 		for (int x=0; x<oldParameters.Length; x++)
 			partParameters [x] = oldParameters [x];
@@ -375,8 +539,8 @@ public class trackManager : MonoBehaviour {
 
 	void removeParameter(int index)
 	{
-		Vector3[] oldParameters = partParameters;
-		partParameters = new Vector3[oldParameters.Length-1];
+		Vector4[] oldParameters = partParameters;
+		partParameters = new Vector4[oldParameters.Length-1];
 
 		for(int x=0;x<index;x++)
 		{
@@ -388,11 +552,17 @@ public class trackManager : MonoBehaviour {
 		}
 	}
 
+	void resetParameterSelect()
+	{
+		selectedExtraParam = 0;
+		selectedPartParams = 0;
+		updateParamReferences();
+	}
+	
 	Vector3 returnProperties(int partNo, int paramNo)
 	{
 		return
-			GameObject.Find("TrackManager").GetComponent<trackPartPool>().
-				pool[partNo].GetComponent<extraParams>().properties[paramNo];
+			GameObject.Find("TrackManager").GetComponent<trackPartPool>().returnPart(partNo).GetComponent<extraParams>().properties[paramNo];
 	}
 
 	int countCurrentParameters(int partIndex)
@@ -405,5 +575,81 @@ public class trackManager : MonoBehaviour {
 		}
 		
 		return count;
+	}
+
+	void updateParamReferences()
+	{
+		selectedPartParams = countCurrentParameters (currentPart);
+		paramReferences = new Vector4[selectedPartParams];
+		int valuesLeft = paramReferences.Length;
+		Vector3 currentProperties;
+
+		if (valuesLeft == 0)
+			return;
+
+		// Get properties and references
+		for(int x=0;x<partParameters.Length;x++)
+		{
+			if((int) partParameters[x].x==currentPart)
+			{
+				currentProperties = returnProperties((int) partParameters[x].y, (int) partParameters[x].z);
+				paramReferences[(int) partParameters[x].z] = new Vector4(currentProperties.x, currentProperties.y, currentProperties.z,
+				                                                         (float) x);
+				valuesLeft += -1;
+				if(valuesLeft==0)
+					break;
+			}
+		}
+	}
+
+	public Rect x100Rect (float x, float y, float sizex, float sizey, int pixelSpacer=0)
+	{
+		return x100Rect((int)Mathf.Round(x), (int)Mathf.Round(y), (int)Mathf.Round (sizex), (int)Mathf.Round(sizey), pixelSpacer);
+	}
+	
+	public Rect x100Rect (int x, int y, int sizex, int sizey = -1, int pixelSpacer=0)
+	{
+		return new Rect(x*Mathf.Round(Screen.width/100f), 
+		                y*Mathf.Round(Screen.height/100f), 
+		                sizex*Mathf.Round(Screen.width/100f),
+		                sizey*Mathf.Round(Screen.height/100f)-pixelSpacer);
+	}
+	
+	public Rect[] rectGroup(int count, int x, int y, int x2, int y2, int pixelSpacer = 10)
+	{
+		float boxHeight = y2 - y;
+		float buttonHeight;
+		if(count>1)
+			buttonHeight = boxHeight/(count-1);
+		else 
+		{
+			buttonHeight = boxHeight;
+			pixelSpacer = 0;
+		}
+		Rect[] returnGroup;
+		returnGroup = new Rect[count];
+		for(int a=0;a<count;a++)
+		{
+			returnGroup[a] = x100Rect(x,y+buttonHeight*a,
+			                          x2-x,buttonHeight, pixelSpacer);
+		}
+		return returnGroup;
+	}
+
+	void load(int saveNo)
+	{
+		if(saveNo>=0 && saveNo < 1000000)
+		{
+			trackSegmentPool.segment s = new trackSegmentPool.segment();
+			usaveRef.slot = saveNo;
+			usaveRef.allResize(0);
+			usaveRef.loadFile(true);
+			partNumbers = usaveRef.iarray;
+			partParameters = s.floatToVectorArray(usaveRef.farray);
+			partMinDifficulty = (int) usaveRef.varray[0].x;
+			partMaxDifficulty = (int) usaveRef.varray[0].y;
+			partName = usaveRef.sarray[0];
+			partSegmentNumber = saveNo.ToString();
+		}
 	}
 }

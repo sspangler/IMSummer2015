@@ -9,7 +9,7 @@ public class skaterCamera : MonoBehaviour {
 	public bool editor = true;
 	Vector3 origin;
 	Camera cameraRef;
-	float[] dataArray = {54f, 31f, 5.5f, 19f, -90f, 0f};
+	float[] dataArray = {51f, 32f, 6f, 7f, -70f, -6f};
 	public float[] incrementArray;
 
 	// Use this for initialization

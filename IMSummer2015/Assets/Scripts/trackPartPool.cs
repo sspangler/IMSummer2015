@@ -7,7 +7,7 @@ public class trackPartPool : MonoBehaviour {
 	public GameObject[] pool;
 	public int[] numberPool;
 	public GameObject endPart;
-	int[] unusedParts = new int[]{0,1,2,3,4,5,6,7,8};
+	int[] unusedParts = new int[]{0,1,2,3,4,5,6,7,8,13,20,21};
 	public int[] parameterCount;
 
 	// Use this for initialization
@@ -90,12 +90,12 @@ public class trackPartPool : MonoBehaviour {
 		parameterCount [oldParameterCount.Length] = objectParameterCount;
 	}
 
-	public GameObject returnPart(int partNumber)
+	public GameObject returnPart(int partNo)
 	{
-		partNumber = Mathf.Abs (partNumber);
+		partNo = Mathf.Abs (partNo);
 		for(int x=0;x<numberPool.Length;x++)
 		{
-			if(numberPool[x]==partNumber)
+			if(numberPool[x]==partNo)
 				return pool[x];
 		}
 		return pool [0];
