@@ -1,29 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
 
 public class iceMove : MonoBehaviour {
 	
 	public float forwardspeed;
+	public float defaultSpeed = 25f;
 	public float speed;
 	public GameObject head;
 	public float bodyLength;
 	Vector3 startPos;
-	[HideInInspector]
-	public float score;
-	public Text scoreText;
+	public float lastRayDistance = 0f;
 	
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		startPos = transform.position;
+		speed = defaultSpeed;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		//move forward
 		transform.Translate(Vector3.forward * forwardspeed * Time.deltaTime);
-		score += Time.deltaTime;
-		scoreText.text = "Score:" + (int)score;
 		RaycastHit hit;
 		Ray ray = new Ray(head.transform.position, -Vector3.up);
 
@@ -49,17 +46,9 @@ public class iceMove : MonoBehaviour {
 				hitObject = false;
 			}
 			// Fall (implement grabity) if there is no platform close enough
-			Debug.Log (hit.distance);
+			lastRayDistance = hit.distance;
 		}
-
-		if(!hitObject)
-		{
-			// apply some gravity.
-			// placeholder gravity
-			transform.position += new Vector3(0f, -1f * Time.deltaTime, 0f);
-		}
-		
-
+		else lastRayDistance = bodyLength + 1f;
 		
 		if (Input.GetKey (KeyCode.A)) {
 			transform.Translate(Vector3.left * speed * Time.deltaTime);
@@ -76,5 +65,9 @@ public class iceMove : MonoBehaviour {
 			transform.position = startPos;
 		}
 	}
-	
+
+	public float returnDifficulty()
+	{
+		return speed - defaultSpeed;
+	}
 }

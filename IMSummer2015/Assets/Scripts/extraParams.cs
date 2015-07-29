@@ -7,8 +7,7 @@ public class extraParams : MonoBehaviour {
 	public Vector3[] properties; // Vec3(min, max, increment)
 
 	// Use this for initialization
-	void Start () {
-	
+	void Awake () {
 	}
 	
 	// Update is called once per frame

@@ -34,9 +34,11 @@ public class skaterCamera : MonoBehaviour {
 			applyData();
 		}
 		cameraRef.fieldOfView = perspective;
-
-		Vector3 lanePosition = new Vector3 (origin.x, origin.y, skaterRef.transform.position.z);
-		transform.position = lanePosition + translation;
+		if(skaterRef!=null)
+		{
+			Vector3 lanePosition = new Vector3 (origin.x, origin.y, skaterRef.transform.position.z);
+			transform.position = lanePosition + translation;
+		}
 
 		//transform.LookAt(lanePosition);
 		//transform.Rotate(new Vector3(-extraRotation.y*perspective*16f/18f, extraRotation.x*perspective, 0f), Space.World);

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
 
 public class trackManager : MonoBehaviour {
 
@@ -16,7 +15,6 @@ public class trackManager : MonoBehaviour {
 	Vector3 hoverPlanePosition;
 	Vector3 hoverPlaneEulers;
 	GameObject hoverPlaneRef;
-	public Text ScoreText;
 	float zoomSpeed = 100f;
 	int selectedExtraParam = 0;
 	int selectedPartParams = 0;
@@ -245,7 +243,6 @@ public class trackManager : MonoBehaviour {
 			{
 				resetHoverplaneTransform();
 				hoverPlaneRef.SetActive(false);
-				ScoreText.text = "";
 				racing = false;
 				GetComponent<lapTimer>().stopTiming();
 			}
@@ -436,6 +433,27 @@ public class trackManager : MonoBehaviour {
 			currentObject.transform.forward = lastForward(x);
 			currentObject.transform.position = lastPosition(x) + (currentObject.transform.position - currentData.attachPoint.transform.position);
 		}
+
+		int parametersLeft = 0;
+		for(int x=0;x<trackParts.Length;x++)
+		{
+			parametersLeft = 0;
+			if(trackParts[x].GetComponent<extraParams>())
+				parametersLeft = trackParts[x].GetComponent<extraParams>().parameters.Length;
+			if(parametersLeft==0)
+				continue;
+			for(int y=0;y<partParameters.Length;y++)
+			{
+				if((int)partParameters[y].x==x)
+				{
+					trackParts[x].GetComponent<extraParams>().parameters[(int)partParameters[y].z] = partParameters[y].w;
+					parametersLeft += -1;
+					if(parametersLeft==0)
+						break;
+				}
+			}
+		}
+
 		if(withEndPart)
 		{
 			GameObject a = (GameObject) GameObject.Instantiate(GetComponent<trackPartPool>().endPart, transform.position, Quaternion.identity);
