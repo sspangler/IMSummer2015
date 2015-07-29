@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class iceMove : MonoBehaviour {
 	
@@ -8,6 +9,9 @@ public class iceMove : MonoBehaviour {
 	public GameObject head;
 	public float bodyLength;
 	Vector3 startPos;
+	[HideInInspector]
+	public float score;
+	public Text scoreText;
 	
 	// Use this for initialization
 	void Start () {
@@ -18,6 +22,8 @@ public class iceMove : MonoBehaviour {
 	void Update () {
 		//move forward
 		transform.Translate(Vector3.forward * forwardspeed * Time.deltaTime);
+		score += Time.deltaTime;
+		scoreText.text = "Score:" + (int)score;
 		RaycastHit hit;
 		Ray ray = new Ray(head.transform.position, -Vector3.up);
 
