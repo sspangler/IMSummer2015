@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class trackManager : MonoBehaviour {
 
@@ -15,6 +16,7 @@ public class trackManager : MonoBehaviour {
 	Vector3 hoverPlanePosition;
 	Vector3 hoverPlaneEulers;
 	GameObject hoverPlaneRef;
+	public Text scoreText;
 	float zoomSpeed = 100f;
 	int selectedExtraParam = 0;
 	int selectedPartParams = 0;
@@ -255,6 +257,7 @@ public class trackManager : MonoBehaviour {
 			{
 				resetHoverplaneTransform();
 				hoverPlaneRef.SetActive(false);
+				scoreText.text = "";
 				racing = false;
 				GetComponent<lapTimer>().stopTiming();
 			}
