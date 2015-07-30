@@ -5,10 +5,11 @@ public class extraPartGenerator : MonoBehaviour {
 
 	public Vector4[] generatorParameters; // (x,y,z,w) = (t.x, t.y, t.z, extraPart#)
 	public bool initialized = false;
+	extraParams paramRef;
 	// Put -999 for param if its not given/used
 	// Use this for initialization
 	void Awake () {
-	
+		paramRef = GetComponent<extraParams> ();
 	}
 	
 	// Update is called once per frame
@@ -26,19 +27,24 @@ public class extraPartGenerator : MonoBehaviour {
 		GameObject gameObjectRef;
 		for(int x=0;x<generatorParameters.Length;x++)
 		{
+			Debug.Log("Spawned");
 			newPos = origin;
 			if(check(generatorParameters[x].x))
-				newPos.x = generatorParameters[x].x;
+				newPos.x = paramRef.parameters[(int)generatorParameters[x].x];
 			if(check(generatorParameters[x].y))
-				newPos.y = generatorParameters[x].y;
+				newPos.y = paramRef.parameters[(int)generatorParameters[x].y];
 			if(check(generatorParameters[x].z))
-				newPos.z = generatorParameters[x].z;
-			gameObjectRef = GameObject.Find ("TrackManager").GetComponent<trackExtraPartPool>().pool[
-			                                                  (int) parameterArray[(int) generatorParameters[x].w]];
-			gameObjectRef = (GameObject) GameObject.Instantiate(gameObjectRef, transform.position, Quaternion.identity);
+				newPos.z = paramRef.parameters[(int)generatorParameters[x].z];
+			gameObjectRef = GameObject.Find ("TrackManager").GetComponent<trackExtraPartPool>().returnValidPart(
+			                                                  (int) parameterArray[(int) generatorParameters[x].w]);
+			if(gameObjectRef==null)
+				gameObjectRef = (GameObject) GameObject.CreatePrimitive(PrimitiveType.Cube);
+			else
+	        	gameObjectRef = (GameObject) GameObject.Instantiate(gameObjectRef, transform.position, Quaternion.identity);
 			gameObjectRef.transform.position = newPos + transform.position;
+			gameObjectRef.transform.parent = transform;
 		}
-		Destroy (this);
+		//Destroy (GetComponent<extraPartGenerator>());
 	}
 
 	bool check(float param)

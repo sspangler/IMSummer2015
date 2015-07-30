@@ -110,7 +110,24 @@ public class trackExtraPartPool : MonoBehaviour {
 		}
 		return false;
 	}
-	
+
+	public GameObject returnValidPart(float number)
+	{
+		return returnValidPart ((int)number);
+	}
+
+	public GameObject returnValidPart(int number)
+	{
+		if (number > pool.Length - 1)
+			number = -1;
+		else if (number < 0)
+			number = -1;
+
+		if(number==-1)
+			return null;
+		else return pool[number];
+	}
+
 	/*public int returnParameterCount(int partNo)
 	{
 		for(int x=0;x<numberPool.Length;x++)

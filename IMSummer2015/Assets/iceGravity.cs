@@ -23,7 +23,7 @@ public class iceGravity : MonoBehaviour {
 		if(!falling)
 		{
 			fallingTime = 0f;
-			velocity = moveRef.bodyLength - moveRef.lastRayDistance;
+			velocity = (moveRef.bodyLength - moveRef.lastRayDistance) / Time.deltaTime;
 
 			// Jumpable (adds velocity)
 

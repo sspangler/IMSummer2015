@@ -217,11 +217,23 @@ public class trackManager : MonoBehaviour {
 			if(selectedPartParams>0)
 			{
 				Rect[] rectArray = rectGroup(selectedPartParams, 80, 10, 96, 90, 20);
+				float oldValue;
+				bool redoTrack = false;
 				for(int x=0;x<rectArray.Length;x++)
 				{
+					oldValue = partParameters[(int)paramReferences[x].w].w;
 					partParameters[(int)paramReferences[x].w].w = GUI.HorizontalSlider(rectArray[x], partParameters[(int)paramReferences[x].w].w, paramReferences[x].x, paramReferences[x].y);
+					if(!redoTrack)
+					{
+						if(oldValue!=partParameters[(int)paramReferences[x].w].w)
+							redoTrack = true;
+						selectedExtraParam = x;
+					}
 				}
+				if(redoTrack)
+					generateTrack();
 			}
+
 			GUITextList(12, Color.black,  new string[]{"Current(" + GetComponent<trackPartPool>().returnNewPartNumber(partNumbers[currentPart], 0) + "): " + trackParts[currentPart].GetComponent<trackPartData>().name,
 										"W - Change part",
 			                            "S - Change part",
