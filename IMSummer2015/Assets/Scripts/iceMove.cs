@@ -3,7 +3,7 @@ using System.Collections;
 
 public class iceMove : MonoBehaviour {
 	
-	public float forwardspeed;
+	public float forwardSpeed;
 	public float defaultSpeed = 25f;
 	public float speed;
 	public GameObject head;
@@ -14,13 +14,13 @@ public class iceMove : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		startPos = transform.position;
-		speed = defaultSpeed;
+		forwardSpeed = defaultSpeed;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		//move forward
-		transform.Translate(Vector3.forward * forwardspeed * Time.deltaTime);
+		transform.Translate(Vector3.forward * forwardSpeed * Time.deltaTime);
 		RaycastHit hit;
 		Ray ray = new Ray(head.transform.position, -Vector3.up);
 
@@ -68,6 +68,6 @@ public class iceMove : MonoBehaviour {
 
 	public float returnDifficulty()
 	{
-		return speed - defaultSpeed;
+		return forwardSpeed - defaultSpeed;
 	}
 }

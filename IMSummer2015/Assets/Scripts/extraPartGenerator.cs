@@ -4,6 +4,7 @@ using System.Collections;
 public class extraPartGenerator : MonoBehaviour {
 
 	public Vector4[] generatorParameters; // (x,y,z,w) = (t.x, t.y, t.z, extraPart#)
+	public bool initialized = false;
 	// Put -999 for param if its not given/used
 	// Use this for initialization
 	void Awake () {
@@ -12,11 +13,13 @@ public class extraPartGenerator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		initialize ();
+		if(!initialized)
+			initialize ();
 	}
 
 	void initialize()
 	{
+		initialized = true;
 		var parameterArray = GetComponent<extraParams> ().parameters;
 		Vector3 origin = transform.position;
 		Vector3 newPos;
