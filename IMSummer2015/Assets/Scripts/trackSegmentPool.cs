@@ -65,6 +65,7 @@ public class trackSegmentPool : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		usaveRef = GetComponent<usave_file> ();
+		segmentPool = new segment[0];
 	}
 	
 	// Update is called once per frame
@@ -89,6 +90,7 @@ public class trackSegmentPool : MonoBehaviour {
 
 	void load(int index)
 	{
+		Debug.Log ("Loading " + index);
 		// Load file
 		usaveRef.slot = index;
 		usaveRef.allResize (0);
@@ -99,9 +101,11 @@ public class trackSegmentPool : MonoBehaviour {
 
 		// Insert segment into array
 		var oldArray = segmentPool;
-		var newArray = new segment[oldArray.Length+1];
+		segment[] newArray;
+		newArray = new segment[oldArray.Length + 1];
 		for(int x=0;x<oldArray.Length;x++)
 			newArray[x] = oldArray[x];
 		newArray [oldArray.Length] = newSegment;
+		segmentPool = newArray;
 	}
 }

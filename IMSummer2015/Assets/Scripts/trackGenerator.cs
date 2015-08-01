@@ -25,8 +25,12 @@ public class trackGenerator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(playerRef.transform.position.z>(nextSegmentPosition.z-50f))
-			drawSegment();
+		if(playerRef!=null)
+		{	
+			if(playerRef.transform.position.z>(nextSegmentPosition.z-90f))
+				drawSegment();
+		}
+		else playerRef = GameObject.Find ("Skater");
 	}
 
 	public void drawSegment()
@@ -38,10 +42,12 @@ public class trackGenerator : MonoBehaviour {
 		while(true)
 		{
 			a = Random.Range(0, segmentPoolRef.segmentPool.Length);
+			Debug.Log(segmentPoolRef.segmentPool.Length + " " + a);
 			difficultyReference = segmentPoolRef.segmentPool[a].difficulty;
 			if(difficultyReference.x<=difficulty && difficultyReference.y>=difficulty)
 			{
 				segmentNumber = a;
+				break;
 			}
 		}
 		generateTrack (segmentPoolRef.segmentPool [a], false, true);

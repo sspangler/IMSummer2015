@@ -257,7 +257,7 @@ public class trackManager : MonoBehaviour {
 			{
 				resetHoverplaneTransform();
 				hoverPlaneRef.SetActive(false);
-				scoreText.text = "";
+				//scoreText.text = "";
 				racing = false;
 				GetComponent<lapTimer>().stopTiming();
 			}
