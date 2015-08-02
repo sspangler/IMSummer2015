@@ -9,6 +9,7 @@ public class loader : MonoBehaviour {
 	int argumentA, argumentB;
 	// Use this for initialization
 	void Awake () {
+		DontDestroyOnLoad (gameObject);
 		Application.targetFrameRate = 60;
 		argumentA = -1;
 		argumentB = -1;
@@ -30,9 +31,9 @@ public class loader : MonoBehaviour {
 			timer += -1;
 	}
 
-	public bool loadScene(int sceneIndex)
+	public bool loadScene(int sceneIndex, bool overide = false)
 	{
-		if(command=="")
+		if(command=="" || overide)
 		{
 			command = "loadScene";
 			timer = 3;
@@ -41,5 +42,10 @@ public class loader : MonoBehaviour {
 		}
 		else
 			return false;
+	}
+
+	public void changeTimer(int newTimer)
+	{
+		timer = newTimer;
 	}
 }

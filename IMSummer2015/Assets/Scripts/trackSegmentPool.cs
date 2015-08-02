@@ -60,6 +60,8 @@ public class trackSegmentPool : MonoBehaviour {
 
 	public segment[] segmentPool;
 	public bool loaded = false;
+	public int maxLoad = 1000000;
+	public int currentLoad = 0;
 	usave_file usaveRef;
 
 	// Use this for initialization
