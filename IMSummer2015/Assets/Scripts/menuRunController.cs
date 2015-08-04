@@ -18,10 +18,13 @@ public class menuRunController : MonoBehaviour {
 	public void command(string a)
 	{
 		if (a == "back")
+		{
 			loaderRef.loadScene (1);
+		}
 		else if (a == "next")
 		{
-			loaderRef.loadScene (6);
+			loaderRef.loadScene (5);
+			loaderRef.gameObject.GetComponent<trackSegmentPool>().loadSegments();
 		}
 	}
 }

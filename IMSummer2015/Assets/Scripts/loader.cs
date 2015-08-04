@@ -36,7 +36,7 @@ public class loader : MonoBehaviour {
 		if(command=="" || overide)
 		{
 			command = "loadScene";
-			timer = 3;
+			timer = 2;
 			argumentA = sceneIndex;
 			return false;
 		}

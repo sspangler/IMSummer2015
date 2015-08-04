@@ -7,6 +7,7 @@ public class skaterCamera : MonoBehaviour {
 	public Vector3 translation;
 	public Vector2 extraRotation;
 	public bool editor = true;
+	public GameObject skaterRef;
 	Vector3 origin;
 	Camera cameraRef;
 	float[] dataArray = {51f, 32f, 6f, 7f, -70f, -6f};
@@ -18,6 +19,10 @@ public class skaterCamera : MonoBehaviour {
 		cameraRef = GetComponent<Camera> ();
 		applyData ();
 		storeData ();
+		if (skaterRef == null)
+			skaterRef = GameObject.Find ("Skater");
+		transform.eulerAngles = new Vector3(-extraRotation.y, extraRotation.x, 0f);
+		cameraRef.fieldOfView = perspective;
 	}
 	
 	// Update is called once per frame
@@ -32,17 +37,14 @@ public class skaterCamera : MonoBehaviour {
 			changeValues(4, "-", "p");
 			changeValues(5, "=", "[");
 			applyData();
+			transform.eulerAngles = new Vector3(-extraRotation.y, extraRotation.x, 0f);
+			cameraRef.fieldOfView = perspective;
 		}
-		cameraRef.fieldOfView = perspective;
 		if(skaterRef!=null)
 		{
 			Vector3 lanePosition = new Vector3 (origin.x, origin.y, skaterRef.transform.position.z);
 			transform.position = lanePosition + translation;
 		}
-
-		//transform.LookAt(lanePosition);
-		//transform.Rotate(new Vector3(-extraRotation.y*perspective*16f/18f, extraRotation.x*perspective, 0f), Space.World);
-		transform.eulerAngles = new Vector3(-extraRotation.y, extraRotation.x, 0f);
 	}
 
 	void storeData()

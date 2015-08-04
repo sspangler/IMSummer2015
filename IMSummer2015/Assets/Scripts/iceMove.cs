@@ -13,6 +13,7 @@ public class iceMove : MonoBehaviour {
 	public float lastRayDistance = 0f;
 	public float score;
 	public Text scoreText;
+	public GameObject lanePos;
 	
 	// Use this for initialization
 	void Awake () {
@@ -64,7 +65,7 @@ public class iceMove : MonoBehaviour {
 		if (Input.GetKey (KeyCode.D)) {
 			transform.Translate(Vector3.right * speed * Time.deltaTime);
 		}
-		
+		lanePos.transform.position = new Vector3(0f, lanePos.transform.position.y, lanePos.transform.position.z);
 	}
 	
 	void OnTriggerEnter (Collider col) {

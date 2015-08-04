@@ -121,9 +121,7 @@ public class usave_file : MonoBehaviour {
 		bool exists;
 		slot = checkslot;
 		if(File.Exists(datapath() + concatenate()))
-		{
 			exists = true;
-		}
 		else
 			exists = false;
 		

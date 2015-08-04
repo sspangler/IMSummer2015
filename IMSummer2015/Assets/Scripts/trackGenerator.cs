@@ -8,17 +8,22 @@ public class trackGenerator : MonoBehaviour {
 	public GameObject playerRef;
 	public Vector4[] parameters;
 	trackSegmentPool segmentPoolRef;
+	trackPartPool partPoolRef;
+	GameObject managerRef;
 
 	// Use this for initialization
 	void Awake () {
+		managerRef = GameObject.Find ("GameManager");
 		if(GetComponent<trackManager>())
 		{
 			if(GetComponent<trackManager>().enabled)
 				inEditor = true;
 		}
-		playerRef = GameObject.Find ("Skater");
+		if(playerRef==null)
+			playerRef = GameObject.Find ("Skater");
 		nextSegmentPosition = GameObject.Find ("InitPart").GetComponent<trackPartData> ().endPoint.transform.position;
-		segmentPoolRef = GetComponent<trackSegmentPool> ();
+		segmentPoolRef = managerRef.GetComponent<trackSegmentPool> ();
+		partPoolRef = managerRef.GetComponent<trackPartPool> ();
 		segmentPoolRef.loadSegments ();
 		// Draw a segment to start with
 	}
@@ -69,7 +74,7 @@ public class trackGenerator : MonoBehaviour {
 		GameObject[] trackParts = new GameObject[partNumbers.Length];
 		for(int x=0;x<trackParts.Length;x++)
 		{
-			trackParts[x] = (GameObject) GameObject.Instantiate(GetComponent<trackPartPool>().returnPart(partNumbers[x]), transform.position, Quaternion.identity);
+			trackParts[x] = (GameObject) GameObject.Instantiate(partPoolRef.returnPart(partNumbers[x]), transform.position, Quaternion.identity);
 			currentObject = trackParts[x];
 			currentData = currentObject.GetComponent<trackPartData>();
 			if(partNumbers[x]<0)
