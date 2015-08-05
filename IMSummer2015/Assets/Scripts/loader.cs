@@ -31,14 +31,19 @@ public class loader : MonoBehaviour {
 			timer += -1;
 	}
 
-	public bool loadScene(int sceneIndex, bool overide = false)
+	public bool loadScene(int sceneIndex, bool overide = false, bool immediate = false)
 	{
 		if(command=="" || overide)
 		{
 			command = "loadScene";
 			timer = 2;
 			argumentA = sceneIndex;
-			return false;
+			if(immediate && overide)
+			{
+				timer = 0;
+				Update();
+			}
+			return true;
 		}
 		else
 			return false;

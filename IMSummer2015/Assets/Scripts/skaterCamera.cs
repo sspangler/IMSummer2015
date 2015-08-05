@@ -40,11 +40,12 @@ public class skaterCamera : MonoBehaviour {
 			transform.eulerAngles = new Vector3(-extraRotation.y, extraRotation.x, 0f);
 			cameraRef.fieldOfView = perspective;
 		}
-		if(skaterRef!=null)
-		{
-			Vector3 lanePosition = new Vector3 (origin.x, origin.y, skaterRef.transform.position.z);
-			transform.position = lanePosition + translation;
-		}
+	}
+
+	public void moveToPosition(float skaterZ)
+	{
+		Vector3 lanePosition = new Vector3 (origin.x, origin.y, skaterZ);
+		transform.position = lanePosition + translation;
 	}
 
 	void storeData()
