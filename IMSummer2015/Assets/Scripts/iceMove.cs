@@ -12,6 +12,7 @@ public class iceMove : MonoBehaviour {
 	Vector3 startPos;
 	public float lastRayDistance = 0f;
 	public float score;
+	public float scoreMultiplier;
 	public Text scoreText;
 	//public GameObject lanePos;
 	public GameObject camGameObjectRef;
@@ -27,6 +28,7 @@ public class iceMove : MonoBehaviour {
 		}
 		startPos = transform.position;
 		forwardSpeed = defaultSpeed;
+		scoreMultiplier = 1;
 	}
 	
 	// Update is called once per frame

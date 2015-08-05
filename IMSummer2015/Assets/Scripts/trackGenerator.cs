@@ -9,6 +9,7 @@ public class trackGenerator : MonoBehaviour {
 	public Vector4[] parameters;
 	trackSegmentPool segmentPoolRef;
 	trackPartPool partPoolRef;
+	PickUpPool pickUpPoolRef;
 	GameObject managerRef;
 
 	// Use this for initialization
@@ -26,6 +27,7 @@ public class trackGenerator : MonoBehaviour {
 			nextSegmentPosition = GameObject.Find ("InitPart").GetComponent<trackPartData> ().endPoint.transform.position;
 			segmentPoolRef = managerRef.GetComponent<trackSegmentPool> ();
 			partPoolRef = managerRef.GetComponent<trackPartPool> ();
+			pickUpPoolRef = managerRef.GetComponent<PickUpPool>();
 			segmentPoolRef.loadSegments ();
 		}
 	}
@@ -83,6 +85,15 @@ public class trackGenerator : MonoBehaviour {
 				currentData.invert();
 			currentObject.transform.forward = lastForward(x, trackParts);
 			currentObject.transform.position = lastPosition(x, trackParts) + (currentObject.transform.position - currentData.attachPoint.transform.position);
+		
+			//pick up spawner
+			int num = Random.Range(0,pickUpPoolRef.pickUps.Length * 2);
+			print(num);
+			if (num < pickUpPoolRef.pickUps.Length) {
+				GameObject pickUp = (GameObject) Instantiate(pickUpPoolRef.pickUps[num], transform.position, Quaternion.identity);
+				pickUp.transform.position = lastPosition(x, trackParts) + (currentObject.transform.position - currentData.attachPoint.transform.position);
+				pickUp.transform.position += Vector3.up * 3;
+			}
 		}
 
 		int parametersLeft = 0;
