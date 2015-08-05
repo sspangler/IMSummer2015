@@ -76,7 +76,7 @@ public class trackSegmentPool : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(!loaded)
+		if(!loaded && !GetComponent<trackManager>())
 		{
 			loadSegments((int)loadWeight);
 			if(skipOneFrame)

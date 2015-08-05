@@ -14,11 +14,17 @@ public class iceMove : MonoBehaviour {
 	public float score;
 	public Text scoreText;
 	//public GameObject lanePos;
+	public GameObject camGameObjectRef;
 	public skaterCamera camRef;
 	
 	// Use this for initialization
 	void Awake () {
-		camRef = GameObject.Find ("Ortho Camera").GetComponent<skaterCamera> ();
+		if(GameObject.Find ("Ortho Camera"))
+			camRef = GameObject.Find ("Ortho Camera").GetComponent<skaterCamera> ();
+		else
+		{
+			camRef = camGameObjectRef.GetComponent<skaterCamera>();
+		}
 		startPos = transform.position;
 		forwardSpeed = defaultSpeed;
 	}
@@ -26,7 +32,6 @@ public class iceMove : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//move forward
-
 		score += Time.deltaTime;
 		scoreText.text = "Score:" + ((int) score).ToString ();
 

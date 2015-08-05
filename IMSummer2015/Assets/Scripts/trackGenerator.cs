@@ -13,19 +13,21 @@ public class trackGenerator : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-		managerRef = GameObject.Find ("GameManager");
-		if(GetComponent<trackManager>())
+		if(!GetComponent<trackManager>())
 		{
-			if(GetComponent<trackManager>().enabled)
-				inEditor = true;
+			managerRef = GameObject.Find ("GameManager");
+			if(GetComponent<trackManager>())
+			{
+				if(GetComponent<trackManager>().enabled)
+					inEditor = true;
+			}
+			if(playerRef==null)
+				playerRef = GameObject.Find ("Skater");
+			nextSegmentPosition = GameObject.Find ("InitPart").GetComponent<trackPartData> ().endPoint.transform.position;
+			segmentPoolRef = managerRef.GetComponent<trackSegmentPool> ();
+			partPoolRef = managerRef.GetComponent<trackPartPool> ();
+			segmentPoolRef.loadSegments ();
 		}
-		if(playerRef==null)
-			playerRef = GameObject.Find ("Skater");
-		nextSegmentPosition = GameObject.Find ("InitPart").GetComponent<trackPartData> ().endPoint.transform.position;
-		segmentPoolRef = managerRef.GetComponent<trackSegmentPool> ();
-		partPoolRef = managerRef.GetComponent<trackPartPool> ();
-		segmentPoolRef.loadSegments ();
-		// Draw a segment to start with
 	}
 	
 	// Update is called once per frame

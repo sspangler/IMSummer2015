@@ -214,7 +214,11 @@ public class trackManager : MonoBehaviour {
 				if(partMaxDifficulty>(partMinDifficulty+1))
 					partMaxDifficulty += -1;
 			}
-
+			GUI.Label(rectGroup(1, 42, 68, 46, 71)[0], partMinDifficulty.ToString());
+			GUI.Label(rectGroup(1, 56, 68, 58, 71)[0], partMaxDifficulty.ToString());
+			hoverPlaneRef.GetComponent<iceMove>().forwardSpeed = hoverPlaneRef.GetComponent<iceMove>().defaultSpeed +
+				GUI.HorizontalSlider(rectGroup(1, 45, 72, 55, 76)[0], hoverPlaneRef.GetComponent<iceMove>().forwardSpeed - hoverPlaneRef.GetComponent<iceMove>().defaultSpeed, partMinDifficulty, partMaxDifficulty);
+			GUI.Label(rectGroup(1, 49, 68, 51, 71)[0], hoverPlaneRef.GetComponent<iceMove>().returnDifficulty().ToString());
 			// Draw parameter sliders
 			if(selectedPartParams>0)
 			{
