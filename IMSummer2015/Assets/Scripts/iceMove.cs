@@ -40,7 +40,6 @@ public class iceMove : MonoBehaviour {
 		// This would cast rays only against colliders in layer 8.
 		// But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
 		layerMask = ~layerMask;
-
 		bool hitObject = false;
 		//if something under the player
 		if (Physics.Raycast(ray, out hit, 9999f, layerMask)) 
@@ -69,16 +68,34 @@ public class iceMove : MonoBehaviour {
 		}
 		//lanePos.transform.position = new Vector3(0f, lanePos.transform.position.y, lanePos.transform.position.z);
 		camRef.moveToPosition (transform.position.z);
+		if (transform.position.y < -30f)
+			die ();
 	}
 	
 	void OnTriggerEnter (Collider col) {
 		if (col.tag == "Kill") {
-			transform.position = startPos;
+			die ();
 		}
 	}
 
 	public float returnDifficulty()
 	{
 		return forwardSpeed - defaultSpeed;
+	}
+
+	public void die()
+	{
+		enabled = false;
+		forwardSpeed = 0f;
+		if(GameObject.Find("runSceneScript"))
+			GameObject.Find ("runSceneScript").GetComponent<runSceneScript>().show();
+	}
+
+	public void reset()
+	{
+		transform.position = startPos;
+		forwardSpeed = defaultSpeed;
+		enabled = true;
+		score = 0f;
 	}
 }
