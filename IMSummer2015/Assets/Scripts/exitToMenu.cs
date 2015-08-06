@@ -19,4 +19,9 @@ public class exitToMenu : MonoBehaviour {
 			else doubleTimer = 0.3f;
 		}
 	}
+
+	void OnGUI ()
+	{
+		GUI.TextArea(new Rect(0,0,139,25), "Back to Menu: 2xEsc"); 
+	}
 }

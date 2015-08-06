@@ -104,5 +104,13 @@ public class iceMove : MonoBehaviour {
 		forwardSpeed = defaultSpeed;
 		enabled = true;
 		score = 0f;
+		GameObject[] obj = (GameObject[]) GameObject.FindObjectsOfType(typeof(GameObject));
+		for (int x=0; x<obj.Length; x++)
+		{
+			if(obj[x].GetComponent<destroyer>())
+				Destroy(obj[x], 0f);
+		}
+		if(GameObject.Find ("TrackManager"))
+			GameObject.Find ("TrackManager").GetComponent<trackGenerator>().nextSegmentPosition = GameObject.Find ("InitPart").GetComponent<trackPartData> ().endPoint.transform.position;
 	}
 }
