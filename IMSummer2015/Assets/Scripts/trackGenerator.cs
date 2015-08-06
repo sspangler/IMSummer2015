@@ -88,9 +88,9 @@ public class trackGenerator : MonoBehaviour {
 		
 			//pick up spawner
 			int num = Random.Range(0,pickUpPoolRef.pickUps.Length * 2);
-			print(num);
 			if (num < pickUpPoolRef.pickUps.Length) {
 				GameObject pickUp = (GameObject) Instantiate(pickUpPoolRef.pickUps[num], transform.position, Quaternion.identity);
+				pickUp.transform.parent = currentObject.transform;
 				pickUp.transform.position = lastPosition(x, trackParts) + (currentObject.transform.position - currentData.attachPoint.transform.position);
 				pickUp.transform.position += Vector3.up * 3;
 			}
