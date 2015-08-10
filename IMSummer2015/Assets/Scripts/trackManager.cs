@@ -90,7 +90,7 @@ public class trackManager : MonoBehaviour {
 				trackSegmentPool.segment s = new trackSegmentPool.segment();
 				while(true)
 				{
-					saveNo = Random.Range(0, 1000000);
+					saveNo = Random.Range(0, 100000);
 					if(!usaveRef.ifSlot(saveNo))
 						break;
 				}
@@ -111,7 +111,7 @@ public class trackManager : MonoBehaviour {
 			{
 				int saveNo = int.Parse(partSegmentNumber);
 				trackSegmentPool.segment s = new trackSegmentPool.segment();
-				if(saveNo>=0 && saveNo < 1000000)
+				if(saveNo>=0 && saveNo < 100000)
 				{
 					usaveRef.slot = saveNo;
 					usaveRef.allResize(0);
@@ -140,7 +140,7 @@ public class trackManager : MonoBehaviour {
 			{
 				int saveNo = int.Parse(partSegmentNumber) + 1;
 				bool foundSegment = false;
-				for(int x=saveNo;x<1000000;x++)
+				for(int x=saveNo;x<100000;x++)
 				{
 					if(usaveRef.ifSlot(x))
 					{
@@ -178,7 +178,7 @@ public class trackManager : MonoBehaviour {
 				}
 				if(!foundSegment)
 				{
-					for(int x=1000000;x>saveNo;x--)
+					for(int x=100000;x>saveNo;x--)
 					{
 						if(usaveRef.ifSlot(x))
 						{
@@ -681,7 +681,7 @@ public class trackManager : MonoBehaviour {
 
 	void load(int saveNo)
 	{
-		if(saveNo>=0 && saveNo < 1000000)
+		if(saveNo>=0 && saveNo < 100000)
 		{
 			trackSegmentPool.segment s = new trackSegmentPool.segment();
 			usaveRef.slot = saveNo;

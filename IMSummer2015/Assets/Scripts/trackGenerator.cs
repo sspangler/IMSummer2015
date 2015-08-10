@@ -6,11 +6,11 @@ public class trackGenerator : MonoBehaviour {
 	public Vector3 nextSegmentPosition;
 	public bool inEditor = false;
 	public GameObject playerRef;
+	public GameObject managerRef;
 	public Vector4[] parameters;
 	trackSegmentPool segmentPoolRef;
 	trackPartPool partPoolRef;
 	PickUpPool pickUpPoolRef;
-	GameObject managerRef;
 
 	// Use this for initialization
 	void Awake () {

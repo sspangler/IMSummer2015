@@ -26,7 +26,7 @@ public class iceMove : MonoBehaviour {
 		{
 			camRef = camGameObjectRef.GetComponent<skaterCamera>();
 		}
-		startPos = transform.position;
+		startPos = transform.position - GameObject.Find ("InitPart").transform.position;
 		forwardSpeed = defaultSpeed;
 		scoreMultiplier = 1;
 	}
@@ -75,7 +75,7 @@ public class iceMove : MonoBehaviour {
 		}
 		//lanePos.transform.position = new Vector3(0f, lanePos.transform.position.y, lanePos.transform.position.z);
 		camRef.moveToPosition (transform.position.z);
-		if (transform.position.y < -30f)
+		if (transform.position.y < -20f)
 			die ();
 	}
 	
@@ -92,6 +92,9 @@ public class iceMove : MonoBehaviour {
 
 	public void die()
 	{
+		// Duplicate model, make duplicate do death anim
+		// here
+
 		enabled = false;
 		forwardSpeed = 0f;
 		if(GameObject.Find("runSceneScript"))
@@ -100,7 +103,7 @@ public class iceMove : MonoBehaviour {
 
 	public void reset()
 	{
-		transform.position = startPos;
+		moveToStart ();
 		forwardSpeed = defaultSpeed;
 		enabled = true;
 		score = 0f;
@@ -111,6 +114,13 @@ public class iceMove : MonoBehaviour {
 				Destroy(obj[x], 0f);
 		}
 		if(GameObject.Find ("TrackManager"))
+		{
 			GameObject.Find ("TrackManager").GetComponent<trackGenerator>().nextSegmentPosition = GameObject.Find ("InitPart").GetComponent<trackPartData> ().endPoint.transform.position;
+		}
+	}
+
+	public void moveToStart()
+	{
+		transform.position = startPos + GameObject.Find ("InitPart").transform.position;
 	}
 }
