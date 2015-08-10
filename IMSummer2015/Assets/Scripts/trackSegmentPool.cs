@@ -7,13 +7,17 @@ public class trackSegmentPool : MonoBehaviour {
 	{
 		public string name;
 		public int[] parts;
+		public int difficultyClass;
 		public Vector4[] parameters;
 		public Vector3 difficulty;
 
 		public segment(string newName, int[] newParts, float[] newParameters, Vector3 newDifficulty)
 		{
 			name = newName;
-			parts = newParts;
+			parts = new int[newParts.Length-1];
+			for(int x=1;x<newParts.Length;x++)
+				parts[x-1] = newParts[x];
+			difficultyClass = newParts[0];
 			parameters = floatToVectorArray(newParameters);
 			difficulty = newDifficulty;
 		}
@@ -21,7 +25,10 @@ public class trackSegmentPool : MonoBehaviour {
 		public segment(string newName, int[] newParts, Vector4[] newParameters, Vector3 newDifficulty)
 		{
 			name = newName;
-			parts = newParts;
+			parts = new int[newParts.Length-1];
+			for(int x=1;x<newParts.Length;x++)
+				parts[x-1] = newParts[x];
+			difficultyClass = newParts[0];
 			parameters = newParameters;
 			difficulty = newDifficulty;
 		}
@@ -32,6 +39,7 @@ public class trackSegmentPool : MonoBehaviour {
 			parts = new int[0];
 			parameters = new Vector4[0];
 			difficulty = new Vector3(0f,0f,0f);
+			difficultyClass = 1;
 		}
 
 		public Vector4[] floatToVectorArray(float[] a)

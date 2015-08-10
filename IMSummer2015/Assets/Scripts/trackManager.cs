@@ -27,6 +27,7 @@ public class trackManager : MonoBehaviour {
 	public int partMinDifficulty = 0;
 	public int partMaxDifficulty = 1;
 	public string partSegmentNumber = "0";
+	public int partDifficultyClass = 1;
 	usave_file usaveRef;
 
 	// Use this for initialization
@@ -97,6 +98,7 @@ public class trackManager : MonoBehaviour {
 				usaveRef.slot = saveNo;
 				usaveRef.allResize(0);
 				usaveRef.iarray = partNumbers;
+				usaveRef.insertBefore(0, partDifficultyClass, true);
 				usaveRef.farray = s.vectorToFloatArray(partParameters);
 				usaveRef.varray = new Vector3[1];
 				usaveRef.varray[0] = new Vector3((float) partMinDifficulty, (float) partMaxDifficulty, 0f);
@@ -114,6 +116,7 @@ public class trackManager : MonoBehaviour {
 					usaveRef.slot = saveNo;
 					usaveRef.allResize(0);
 					usaveRef.iarray = partNumbers;
+					usaveRef.insertBefore(0, partDifficultyClass, true);
 					usaveRef.farray = s.vectorToFloatArray(partParameters);
 					usaveRef.varray = new Vector3[1];
 					usaveRef.varray[0] = new Vector3((float) partMinDifficulty, (float) partMaxDifficulty, 0f);
@@ -684,7 +687,10 @@ public class trackManager : MonoBehaviour {
 			usaveRef.slot = saveNo;
 			usaveRef.allResize(0);
 			usaveRef.loadFile(true);
-			partNumbers = usaveRef.iarray;
+			partDifficultyClass = usaveRef.iarray[0];
+			partNumbers = new int[usaveRef.iarray.Length-1];
+			for(int x=1;x<usaveRef.iarray.Length;x++)
+				partNumbers[x-1] = usaveRef.iarray[x];
 			partParameters = s.floatToVectorArray(usaveRef.farray);
 			partMinDifficulty = (int) usaveRef.varray[0].x;
 			partMaxDifficulty = (int) usaveRef.varray[0].y;
