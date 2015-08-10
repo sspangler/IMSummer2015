@@ -222,6 +222,21 @@ public class trackManager : MonoBehaviour {
 			hoverPlaneRef.GetComponent<iceMove>().forwardSpeed = hoverPlaneRef.GetComponent<iceMove>().defaultSpeed +
 				GUI.HorizontalSlider(rectGroup(1, 45, 72, 55, 76)[0], hoverPlaneRef.GetComponent<iceMove>().forwardSpeed - hoverPlaneRef.GetComponent<iceMove>().defaultSpeed, partMinDifficulty, partMaxDifficulty);
 			GUI.Label(rectGroup(1, 49, 68, 51, 71)[0], hoverPlaneRef.GetComponent<iceMove>().returnDifficulty().ToString());
+			// Difficulty CLASS modifier
+			a = rectGroup(1, 74, 71, 79, 74)[0];
+			if(GUI.Button(a, "Class+"))
+			{
+				if(partDifficultyClass<3)
+					partDifficultyClass += 1;
+			}
+			a = rectGroup(1, 74, 74, 79, 77)[0];
+			if(GUI.Button(a, "Class-"))
+			{
+				if(partDifficultyClass>1)
+					partDifficultyClass += -1;
+			}
+			GUI.Label(rectGroup(1, 71, 68, 73, 71)[0], partDifficultyClass.ToString());
+
 			// Draw parameter sliders
 			if(selectedPartParams>0)
 			{
@@ -298,7 +313,7 @@ public class trackManager : MonoBehaviour {
 				else if(currentCameraDistance>700f)
 					currentCameraDistance = 700f;
 
-				if(Input.GetKeyDown (KeyCode.A)) // Next piece
+				if(Input.GetKeyDown (KeyCode.D)) // Next piece
 				{
 					trackParts[currentPart].GetComponent<trackPartData>().setHighlight(false);
 					if(currentPart<(trackParts.Length-1))
@@ -311,7 +326,7 @@ public class trackManager : MonoBehaviour {
 					}
 					resetParameterSelect();
 				}
-				else if(Input.GetKeyDown (KeyCode.D)) // Previous piece
+				else if(Input.GetKeyDown (KeyCode.A)) // Previous piece
 				{
 					if(currentPart>0)
 					{
