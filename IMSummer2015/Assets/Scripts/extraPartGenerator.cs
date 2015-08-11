@@ -6,10 +6,14 @@ public class extraPartGenerator : MonoBehaviour {
 	public Vector4[] generatorParameters; // (x,y,z,w) = (t.x, t.y, t.z, extraPart#)
 	public bool initialized = false;
 	extraParams paramRef;
+	trackExtraPartPool extraPoolRef;
 	// Put -999 for param if its not given/used
 	// Use this for initialization
 	void Awake () {
 		paramRef = GetComponent<extraParams> ();
+		if (GameObject.Find ("TrackManager").GetComponent<trackExtraPartPool> ())
+			extraPoolRef = GameObject.Find ("TrackManager").GetComponent<trackExtraPartPool> ();
+		else extraPoolRef = GameObject.Find ("GameManager").GetComponent<trackExtraPartPool>();
 	}
 	
 	// Update is called once per frame
@@ -35,7 +39,7 @@ public class extraPartGenerator : MonoBehaviour {
 				newPos.y = paramRef.parameters[(int)generatorParameters[x].y];
 			if(check(generatorParameters[x].z))
 				newPos.z = paramRef.parameters[(int)generatorParameters[x].z];
-			gameObjectRef = GameObject.Find ("TrackManager").GetComponent<trackExtraPartPool>().returnValidPart(
+			gameObjectRef = extraPoolRef.returnValidPart(
 			                                                  (int) parameterArray[(int) generatorParameters[x].w]);
 			if(gameObjectRef==null)
 				gameObjectRef = (GameObject) GameObject.CreatePrimitive(PrimitiveType.Cube);

@@ -56,5 +56,11 @@ public class difficultyStack : MonoBehaviour {
 			newArray[x] = stack[x];
 		for(int x=stack.Length;x<newArray.Length;x++)
 			newArray[x] = newStack[x-stack.Length];
+		stack = newArray;
+	}
+
+	public void reset()
+	{
+		stack = new int[]{1,1,2,3,2};
 	}
 }

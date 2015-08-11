@@ -11,9 +11,11 @@ public class trackGenerator : MonoBehaviour {
 	trackSegmentPool segmentPoolRef;
 	trackPartPool partPoolRef;
 	PickUpPool pickUpPoolRef;
+	difficultyStack stackRef;
 
 	// Use this for initialization
 	void Awake () {
+		stackRef = GetComponent<difficultyStack> ();
 		if(!GetComponent<trackManager>())
 		{
 			managerRef = GameObject.Find ("GameManager");
@@ -44,7 +46,8 @@ public class trackGenerator : MonoBehaviour {
 
 	public void drawSegment()
 	{
-		float difficulty = playerRef.GetComponent<iceMove> ().returnDifficulty();
+		int difficultyClass = stackRef.pop ();
+		float speed = playerRef.GetComponent<iceMove> ().returnDifficulty();
 		int a;
 		int segmentNumber = 0;
 		Vector3 difficultyReference;
@@ -53,7 +56,8 @@ public class trackGenerator : MonoBehaviour {
 			a = Random.Range(0, segmentPoolRef.segmentPool.Length);
 			Debug.Log(segmentPoolRef.segmentPool.Length + " " + a);
 			difficultyReference = segmentPoolRef.segmentPool[a].difficulty;
-			if(difficultyReference.x<=difficulty && difficultyReference.y>=difficulty)
+			if(difficultyReference.x<=speed && difficultyReference.y>=speed && 
+			   segmentPoolRef.segmentPool[a].difficultyClass == difficultyClass)
 			{
 				segmentNumber = a;
 				break;

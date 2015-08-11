@@ -80,7 +80,7 @@ public class iceMove : MonoBehaviour {
 	}
 	
 	void OnTriggerEnter (Collider col) {
-		if (col.tag == "Kill") {
+		if (col.tag == "Death") {
 			die ();
 		}
 	}
@@ -99,6 +99,8 @@ public class iceMove : MonoBehaviour {
 		forwardSpeed = 0f;
 		if(GameObject.Find("runSceneScript"))
 			GameObject.Find ("runSceneScript").GetComponent<runSceneScript>().show();
+		if (GameObject.Find ("TrackManager").GetComponent<difficultyStack> ())
+			GameObject.Find ("TrackManager").GetComponent<difficultyStack> ().reset ();
 	}
 
 	public void reset()
