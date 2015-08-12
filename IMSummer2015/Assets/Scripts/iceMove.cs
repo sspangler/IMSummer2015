@@ -82,7 +82,7 @@ public class iceMove : MonoBehaviour {
 	}
 	
 	void OnTriggerEnter (Collider col) {
-		if (col.tag == "Death" && killable = true) {
+		if (col.tag == "Death" && killable == true) {
 			die ();
 		}
 	}
