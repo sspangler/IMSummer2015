@@ -17,9 +17,11 @@ public class iceMove : MonoBehaviour {
 	//public GameObject lanePos;
 	public GameObject camGameObjectRef;
 	public skaterCamera camRef;
+	public bool killable;
 	
 	// Use this for initialization
 	void Awake () {
+		killable = true;
 		if(GameObject.Find ("Ortho Camera"))
 			camRef = GameObject.Find ("Ortho Camera").GetComponent<skaterCamera> ();
 		else
@@ -80,7 +82,7 @@ public class iceMove : MonoBehaviour {
 	}
 	
 	void OnTriggerEnter (Collider col) {
-		if (col.tag == "Death") {
+		if (col.tag == "Death" && killable = true) {
 			die ();
 		}
 	}
