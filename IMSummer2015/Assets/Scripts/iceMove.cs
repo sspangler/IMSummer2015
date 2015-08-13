@@ -83,6 +83,7 @@ public class iceMove : MonoBehaviour {
 	}
 	
 	void OnTriggerEnter (Collider col) {
+		Debug.Log ("Enter" + " " + col.gameObject.name);
 		if (col.gameObject.tag == "Death" && killable) {
 			Debug.Log ("Dying");
 			die ();
@@ -108,10 +109,10 @@ public class iceMove : MonoBehaviour {
 
 		enabled = false;
 		forwardSpeed = 0f;
-		if(GameObject.Find("runSceneScript"))
-			GameObject.Find ("runSceneScript").GetComponent<runSceneScript>().show();
 		if (GameObject.Find ("TrackManager").GetComponent<difficultyStack> ())
 			GameObject.Find ("TrackManager").GetComponent<difficultyStack> ().reset ();
+		if(GameObject.Find("runSceneScript"))
+			GameObject.Find ("runSceneScript").GetComponent<runSceneScript>().show();
 	}
 
 	public void reset()
