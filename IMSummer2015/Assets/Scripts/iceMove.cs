@@ -18,6 +18,7 @@ public class iceMove : MonoBehaviour {
 	public GameObject camGameObjectRef;
 	public skaterCamera camRef;
 	public bool killable;
+	public LayerMask layers;
 	
 	// Use this for initialization
 	void Awake () {
@@ -44,14 +45,14 @@ public class iceMove : MonoBehaviour {
 		Ray ray = new Ray(head.transform.position, -Vector3.up);
 
 		// Bit shift the index of the layer (8) to get a bit mask
-		int layerMask = 1 << 8;
+		int layerMask = 1 << 8 << 9;
 		
 		// This would cast rays only against colliders in layer 8.
 		// But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
 		layerMask = ~layerMask;
 		bool hitObject = false;
 		//if something under the player
-		if (Physics.Raycast(ray, out hit, 9999f, layerMask)) 
+		if (Physics.Raycast(ray, out hit, 9999f, layers)) 
 		{
 			// Move up if im hitting a platform
 			if(hit.distance<bodyLength)
