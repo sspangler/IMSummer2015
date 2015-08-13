@@ -83,7 +83,15 @@ public class iceMove : MonoBehaviour {
 	}
 	
 	void OnTriggerEnter (Collider col) {
-		if (col.tag == "Death" && killable == true) {
+		if (col.gameObject.tag == "Death" && killable) {
+			Debug.Log ("Dying");
+			die ();
+		}
+	}
+
+	void OnTriggerStay (Collider col) {
+		if (col.gameObject.tag == "Death" && killable) {
+			Debug.Log ("Dying");
 			die ();
 		}
 	}

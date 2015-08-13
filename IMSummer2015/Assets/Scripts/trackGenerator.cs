@@ -54,7 +54,6 @@ public class trackGenerator : MonoBehaviour {
 		while(true)
 		{
 			a = Random.Range(0, segmentPoolRef.segmentPool.Length);
-			Debug.Log(segmentPoolRef.segmentPool.Length + " " + a);
 			difficultyReference = segmentPoolRef.segmentPool[a].difficulty;
 			if(difficultyReference.x<=speed && difficultyReference.y>=speed && 
 			   segmentPoolRef.segmentPool[a].difficultyClass == difficultyClass)
