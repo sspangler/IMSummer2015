@@ -23,7 +23,7 @@ public class PickUpCarrier : MonoBehaviour {
 			invincibility -= 40f * Time.deltaTime;
 			invincibilitySlider.value = invincibility / 100;
 		}
-		if (Input.GetKeyUp (KeyCode.Return)) {
+		if (Input.GetKeyUp (KeyCode.Return) || invincibility <= 0) {
 			iceMove.killable = true;
 		}
 

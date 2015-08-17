@@ -3,11 +3,11 @@ using System.Collections;
 
 public class iceGravity : MonoBehaviour {
 
-	public float gravityEffect = 7f; // in m/s? probably close enough (earth=9.8)
+	public float gravityEffect = 10f; // in m/s? probably close enough (earth=9.8)
 	public float terminalVelocity = 40f; // human is 56
 	public float curveExponent = 2f; // Similar to drag? Lower number = higher drag.
 	public bool jumpEnabled = false;
-	public float jumpPower = 10f;
+	public float jumpPower = 1f;
 	public float maxHangtime = 10f;
 	public float minHangtime = 5f;
 	bool jumping = false;
