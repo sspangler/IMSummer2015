@@ -12,7 +12,7 @@ public class extraParams : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		roundEverything ();
 	}
 
 	public float inc(int index, float previousValue = -9999f)
@@ -39,5 +39,15 @@ public class extraParams : MonoBehaviour {
 			newValue = properties [index].x;
 		parameters [index] = newValue;
 		return newValue;
+	}
+
+	void roundEverything()
+	{
+		float roundTo = 1f;
+		// partParameters[(int)paramReferences[x].w].w
+		for(int x=0;x<parameters.Length;x++)
+		{
+			parameters[x] = Mathf.Round(parameters[x] * (1f / roundTo)) * (roundTo / 1f);
+		}
 	}
 }

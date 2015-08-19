@@ -5,11 +5,13 @@ public class extraPartGenerator : MonoBehaviour {
 
 	public Vector4[] generatorParameters; // (x,y,z,w) = (t.x, t.y, t.z, extraPart#)
 	public bool initialized = false;
+	float modifier;
 	extraParams paramRef;
 	trackExtraPartPool extraPoolRef;
 	// Put -999 for param if its not given/used
 	// Use this for initialization
 	void Awake () {
+		modifier = (8f / 3f) / 2f;
 		paramRef = GetComponent<extraParams> ();
 		if (GameObject.Find ("TrackManager").GetComponent<trackExtraPartPool> ())
 			extraPoolRef = GameObject.Find ("TrackManager").GetComponent<trackExtraPartPool> ();
@@ -34,11 +36,13 @@ public class extraPartGenerator : MonoBehaviour {
 			Debug.Log("Spawned");
 			newPos = origin;
 			if(check(generatorParameters[x].x))
-				newPos.x = paramRef.parameters[(int)generatorParameters[x].x];
+			{
+				newPos.x = paramRef.parameters[(int)generatorParameters[x].x] * modifier;
+			}
 			if(check(generatorParameters[x].y))
-				newPos.y = paramRef.parameters[(int)generatorParameters[x].y];
+				newPos.y = paramRef.parameters[(int)generatorParameters[x].y] * modifier + 0.5f;
 			if(check(generatorParameters[x].z))
-				newPos.z = paramRef.parameters[(int)generatorParameters[x].z];
+				newPos.z = paramRef.parameters[(int)generatorParameters[x].z] * modifier;
 			gameObjectRef = extraPoolRef.returnValidPart(
 			                                                  (int) parameterArray[(int) generatorParameters[x].w]);
 			if(gameObjectRef==null)

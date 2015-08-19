@@ -267,6 +267,7 @@ public class trackManager : MonoBehaviour {
 			                            "F - Invert part",
 										"Backspace - Delete current part"});
 		}
+		roundEverything ();
 	}
 
 	// Update is called once per frame
@@ -711,6 +712,16 @@ public class trackManager : MonoBehaviour {
 			partMaxDifficulty = (int) usaveRef.varray[0].y;
 			partName = usaveRef.sarray[0];
 			partSegmentNumber = saveNo.ToString();
+		}
+	}
+
+	void roundEverything()
+	{
+		float roundTo = 1f;
+		// partParameters[(int)paramReferences[x].w].w
+		for(int x=0;x<partParameters.Length;x++)
+		{
+			partParameters[(int)paramReferences[x].w].w = Mathf.Round(partParameters[(int)paramReferences[x].w].w * (1f / roundTo)) * (roundTo / 1f);
 		}
 	}
 }
