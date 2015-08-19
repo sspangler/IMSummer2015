@@ -238,6 +238,7 @@ public class trackManager : MonoBehaviour {
 			GUI.Label(rectGroup(1, 71, 68, 73, 71)[0], partDifficultyClass.ToString());
 
 			// Draw parameter sliders
+			roundEverything ();
 			if(selectedPartParams>0)
 			{
 				Rect[] rectArray = rectGroup(selectedPartParams, 80, 10, 96, 90, 20);
@@ -247,6 +248,7 @@ public class trackManager : MonoBehaviour {
 				{
 					oldValue = partParameters[(int)paramReferences[x].w].w;
 					partParameters[(int)paramReferences[x].w].w = GUI.HorizontalSlider(rectArray[x], partParameters[(int)paramReferences[x].w].w, paramReferences[x].x, paramReferences[x].y);
+					GUI.Label(new Rect(rectArray[x].position.x-10 ,rectArray[x].position.y-1, rectArray[x].position.x-1, rectArray[x].position.y+3), partParameters[(int)paramReferences[x].w].w.ToString());
 					if(!redoTrack)
 					{
 						if(oldValue!=partParameters[(int)paramReferences[x].w].w)
