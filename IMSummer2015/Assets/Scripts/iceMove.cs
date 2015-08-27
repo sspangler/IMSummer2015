@@ -13,6 +13,7 @@ public class iceMove : MonoBehaviour {
 	public float lastRayDistance = 0f;
 	public float score;
 	public float scoreMultiplier;
+	public float speedMultiplier;
 	public Text scoreText;
 	//public GameObject lanePos;
 	public GameObject camGameObjectRef;
@@ -41,7 +42,7 @@ public class iceMove : MonoBehaviour {
 		if(scoreText!=null)
 			scoreText.text = "Score:" + ((int) score).ToString ();
 
-		transform.Translate(Vector3.forward * forwardSpeed * Time.deltaTime);
+		transform.Translate(Vector3.forward * forwardSpeed * speedMultiplier * Time.deltaTime);
 		RaycastHit hit;
 		Ray ray = new Ray(head.transform.position, -Vector3.up);
 
