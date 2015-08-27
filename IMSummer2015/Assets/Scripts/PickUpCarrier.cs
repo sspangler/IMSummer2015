@@ -13,7 +13,8 @@ public class PickUpCarrier : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		iceMove = transform.parent.GetComponent<iceMove> ();
-		invincibilitySlider.value = 0;
+		if(invincibilitySlider!=null)
+			invincibilitySlider.value = 0;
 	}
 	
 	// Update is called once per frame

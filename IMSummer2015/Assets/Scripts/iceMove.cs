@@ -38,7 +38,8 @@ public class iceMove : MonoBehaviour {
 	void Update () {
 		//move forward
 		score += Time.deltaTime;
-		scoreText.text = "Score:" + ((int) score).ToString ();
+		if(scoreText!=null)
+			scoreText.text = "Score:" + ((int) score).ToString ();
 
 		transform.Translate(Vector3.forward * forwardSpeed * Time.deltaTime);
 		RaycastHit hit;
