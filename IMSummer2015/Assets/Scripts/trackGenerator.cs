@@ -86,7 +86,7 @@ public class trackGenerator : MonoBehaviour {
 		{
 			backgroundCounter += 1;
 			if (backgroundCounter >=10) {
-				backgroundRef.SpawnObject();
+				backgroundRef.SpawnFarObject();
 				backgroundCounter = 0;
 			}
 			trackParts[x] = (GameObject) GameObject.Instantiate(partPoolRef.returnPart(partNumbers[x]), transform.position, Quaternion.identity);
