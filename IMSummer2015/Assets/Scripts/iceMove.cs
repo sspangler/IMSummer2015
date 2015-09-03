@@ -6,7 +6,12 @@ public class iceMove : MonoBehaviour {
 	
 	public float forwardSpeed;
 	public float defaultSpeed = 25f;
-	public float speed;
+	public float turnSpeed;
+	float currentTurnSpeed;
+	public float turnAccel = 0.15f;
+	float desiredTurnSpeed;
+	float turnAccelNo;
+	float decel = 1.5f;
 	public GameObject head;
 	public float bodyLength;
 	Vector3 startPos;
@@ -20,6 +25,8 @@ public class iceMove : MonoBehaviour {
 	public skaterCamera camRef;
 	public bool killable;
 	public LayerMask layers;
+
+	float edgeDistance = 11.9f;
 	
 	// Use this for initialization
 	void Awake () {
@@ -32,11 +39,13 @@ public class iceMove : MonoBehaviour {
 		}
 		startPos = transform.position - GameObject.Find ("InitPart").transform.position;
 		forwardSpeed = defaultSpeed;
+		currentTurnSpeed = 0f;
 		scoreMultiplier = 1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		turnAccelNo = turnSpeed * turnAccel;
 		//move forward
 		score += Time.deltaTime;
 		if(scoreText!=null)
@@ -45,13 +54,7 @@ public class iceMove : MonoBehaviour {
 		transform.Translate(Vector3.forward * forwardSpeed * speedMultiplier * Time.deltaTime);
 		RaycastHit hit;
 		Ray ray = new Ray(head.transform.position, -Vector3.up);
-
-		// Bit shift the index of the layer (8) to get a bit mask
-		int layerMask = 1 << 8 << 9;
 		
-		// This would cast rays only against colliders in layer 8.
-		// But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
-		layerMask = ~layerMask;
 		bool hitObject = false;
 		//if something under the player
 		if (Physics.Raycast(ray, out hit, 9999f, layers)) 
@@ -66,18 +69,59 @@ public class iceMove : MonoBehaviour {
 			{
 				hitObject = false;
 			}
-			// Fall (implement grabity) if there is no platform close enough
+			// Fall (using gravity) if there is no platform close enough
 			lastRayDistance = hit.distance;
 		}
 		else lastRayDistance = bodyLength + 1f;
-		
+
+		// Get turning input
+		desiredTurnSpeed = 0f;
 		if (Input.GetKey (KeyCode.A)) {
-			transform.Translate(Vector3.left * speed * Time.deltaTime);
+			desiredTurnSpeed = -turnSpeed;
 		}
-		
-		if (Input.GetKey (KeyCode.D)) {
-			transform.Translate(Vector3.right * speed * Time.deltaTime);
+		else if (Input.GetKey (KeyCode.D)) {
+			desiredTurnSpeed = turnSpeed;
 		}
+
+		if(desiredTurnSpeed==0f)
+		{
+			if(Mathf.Abs(currentTurnSpeed)<(turnAccelNo*decel))
+				currentTurnSpeed = 0f;
+			else currentTurnSpeed = Mathf.Sign(currentTurnSpeed) * (Mathf.Abs(currentTurnSpeed) - (turnAccelNo*decel));
+		}
+		else
+		{
+			if(currentTurnSpeed==0f)
+				currentTurnSpeed = Mathf.Sign(desiredTurnSpeed) * 0.0001f;
+			if(Mathf.Sign(desiredTurnSpeed)!=Mathf.Sign(currentTurnSpeed))
+			{
+				currentTurnSpeed = Mathf.Sign (currentTurnSpeed) * (Mathf.Abs(currentTurnSpeed) - (turnAccelNo * decel));
+				if(Mathf.Abs(currentTurnSpeed)>turnSpeed)
+					currentTurnSpeed = Mathf.Sign (currentTurnSpeed) * turnSpeed;
+			}
+			else
+			{
+				currentTurnSpeed = Mathf.Sign (currentTurnSpeed) * (Mathf.Abs(currentTurnSpeed) + turnAccelNo);
+				if(Mathf.Abs(currentTurnSpeed)>turnSpeed)
+					currentTurnSpeed = Mathf.Sign (currentTurnSpeed) * turnSpeed;
+			}
+		}
+
+		//Apply turning
+		transform.Translate (Vector3.right * currentTurnSpeed * Time.deltaTime);
+		if(transform.position.x<startPos.x-11.9f) // Check left limit
+		{
+			Vector3 a = transform.position;
+			a.y = -11.9f;
+			transform.position = a;
+		}
+		if(transform.position.x<startPos.x+11.9f) // Check right limit
+		{
+			Vector3 a = transform.position;
+			a.y = 11.9f;
+			transform.position = a;
+		}
+
 		//lanePos.transform.position = new Vector3(0f, lanePos.transform.position.y, lanePos.transform.position.z);
 		camRef.moveToPosition (transform.position.z);
 		if (transform.position.y < -20f)

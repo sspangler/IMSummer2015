@@ -99,6 +99,7 @@ public class iceGravity : MonoBehaviour {
 
 	void applyGravity()
 	{
+		float debugA = velocity;
 		if(!jumping)
 		{
 			if (velocity > 0f)
@@ -108,6 +109,7 @@ public class iceGravity : MonoBehaviour {
 				velocity += -(gravityEffect*returnFactor(Mathf.Abs(velocity), terminalVelocity, curveExponent, false)*fallingFrame);
 			}
 		}
+		Debug.Log ("Vel Change: " + (debugA - velocity));
 		transform.position += new Vector3(0f, velocity*fallingFrame, 0f);
 	}
 
