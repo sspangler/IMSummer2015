@@ -12,6 +12,8 @@ public class trackGenerator : MonoBehaviour {
 	trackPartPool partPoolRef;
 	PickUpPool pickUpPoolRef;
 	difficultyStack stackRef;
+	BackgroundSpawner backgroundRef;
+	int backgroundCounter = 0;
 
 	// Use this for initialization
 	void Awake () {
@@ -30,6 +32,7 @@ public class trackGenerator : MonoBehaviour {
 			segmentPoolRef = managerRef.GetComponent<trackSegmentPool> ();
 			partPoolRef = managerRef.GetComponent<trackPartPool> ();
 			pickUpPoolRef = managerRef.GetComponent<PickUpPool>();
+			backgroundRef = GetComponent<BackgroundSpawner>();
 			segmentPoolRef.loadSegments ();
 		}
 	}
@@ -81,6 +84,11 @@ public class trackGenerator : MonoBehaviour {
 		GameObject[] trackParts = new GameObject[partNumbers.Length];
 		for(int x=0;x<trackParts.Length;x++)
 		{
+			backgroundCounter += 1;
+			if (backgroundCounter >=10) {
+				backgroundRef.SpawnObject();
+				backgroundCounter = 0;
+			}
 			trackParts[x] = (GameObject) GameObject.Instantiate(partPoolRef.returnPart(partNumbers[x]), transform.position, Quaternion.identity);
 			currentObject = trackParts[x];
 			currentData = currentObject.GetComponent<trackPartData>();
