@@ -3,16 +3,20 @@ using System.Collections;
 
 public class iceGravity : MonoBehaviour {
 
-	public float gravityEffect = 10f; // in m/s? probably close enough (earth=9.8)
-	public float terminalVelocity = 40f; // human is 56
-	public float curveExponent = 2f; // Similar to drag? Lower number = higher drag.
+	//public float gravityEffect = 10f; // in m/s? probably close enough (earth=9.8)
+	//public float terminalVelocity = 40f; // human is 56
+	//public float curveExponent = 2f; // Similar to drag? Lower number = higher drag.
 	public bool jumpEnabled = false;
 	public float jumpPower = 1f;
-	public float maxHangtime = 10f;
-	public float minHangtime = 5f;
+	public float gravityPower;
+	public float maxGravity;
+	public float maxHoverTime;
+	public Vector2 hoverDrag;
+	public float hangtime = 6f;
 	bool jumping = false;
 	float jumpTime = 0f;
 	float targetJumpTime;
+	float hoverTime = 0f;
 	public bool falling = false;
 	public float velocity = 0f;
 	iceMove moveRef;
@@ -20,13 +24,13 @@ public class iceGravity : MonoBehaviour {
 	float fallingFrame;
 	bool recentFall = false;
 	float spaceDown = 0f;
-	float maxSpaceDown = 8f;
+	float maxSpaceDown = 0.1f;
 
 	// Use this for initialization
 	void Awake () {
 		fallingFrame = 1f / 60f;
-		maxHangtime = maxHangtime * fallingFrame;
-		minHangtime = minHangtime * fallingFrame;
+		hangtime = hangtime * fallingFrame;
+		maxHoverTime = maxHoverTime * fallingFrame;
 		maxSpaceDown = maxSpaceDown * fallingFrame;
 		moveRef = GetComponent<iceMove> ();
 	}
@@ -59,7 +63,6 @@ public class iceGravity : MonoBehaviour {
 			else if(moveRef.lastRayDistance> moveRef.bodyLength)
 			{
 				falling = true;
-				Debug.Log("Now falling");
 			}
 			recentFall = false;
 		}
@@ -70,7 +73,6 @@ public class iceGravity : MonoBehaviour {
 			{
 				falling = false;
 				jumping = false;
-				Debug.Log("Now skating");
 			}
 
 			fallingTime += Time.deltaTime;
@@ -88,11 +90,12 @@ public class iceGravity : MonoBehaviour {
 			if(jumping)
 			{
 				jumpTime += Time.deltaTime;
-				if(Input.GetKey(KeyCode.Space))
-					targetJumpTime = maxHangtime;
-				else targetJumpTime = minHangtime;
+				targetJumpTime = hangtime;
 				if(jumpTime>targetJumpTime)
+				{
 					jumping = false;
+					hoverTime = maxHoverTime;
+				}
 			}
 		}
 	}
@@ -102,14 +105,29 @@ public class iceGravity : MonoBehaviour {
 		float debugA = velocity;
 		if(!jumping)
 		{
-			if (velocity > 0f)
-				velocity += -gravityEffect*fallingFrame;
+			/*if (velocity >= 0f)
+				velocity += -gravityEffect*(1f)*fallingFrame;//+(returnFactor(Mathf.Abs(velocity), 50f, curveExponent, true)))*fallingFrame;
 			else
 			{
 				velocity += -(gravityEffect*returnFactor(Mathf.Abs(velocity), terminalVelocity, curveExponent, false)*fallingFrame);
+			}*/
+			if(!Input.GetKey(KeyCode.Space))
+				hoverTime = 0f;
+
+			if(velocity >= 0f && hoverTime> 0f)
+			{
+				velocity += -(hoverDrag.x * fallingFrame + (hoverDrag.y*velocity));
+				if(velocity<0f)
+					velocity = 0f;
+				hoverTime += -fallingFrame;
+				Debug.Log ("Hovering");
+			}
+			else
+			{
+				velocity += -gravityPower*fallingFrame;
 			}
 		}
-		Debug.Log ("Vel Change: " + (debugA - velocity));
+		//Debug.Log ("Vel Change: " + (debugA - velocity));
 		transform.position += new Vector3(0f, velocity*fallingFrame, 0f);
 	}
 

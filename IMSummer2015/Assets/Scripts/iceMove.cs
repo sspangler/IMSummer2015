@@ -15,6 +15,7 @@ public class iceMove : MonoBehaviour {
 	public GameObject head;
 	public float bodyLength;
 	Vector3 startPos;
+	float xStart;
 	public float lastRayDistance = 0f;
 	public float score;
 	public float scoreMultiplier;
@@ -38,6 +39,7 @@ public class iceMove : MonoBehaviour {
 			camRef = camGameObjectRef.GetComponent<skaterCamera>();
 		}
 		startPos = transform.position - GameObject.Find ("InitPart").transform.position;
+		xStart = transform.position.x;
 		forwardSpeed = defaultSpeed;
 		currentTurnSpeed = 0f;
 		scoreMultiplier = 1;
@@ -109,18 +111,21 @@ public class iceMove : MonoBehaviour {
 
 		//Apply turning
 		transform.Translate (Vector3.right * currentTurnSpeed * Time.deltaTime);
-		if(transform.position.x<startPos.x-11.9f) // Check left limit
+		if(transform.position.x<(xStart-11.4f)) // Check left limit
 		{
+			Debug.Log ("Far Left");
 			Vector3 a = transform.position;
-			a.y = -11.9f;
+			a.x = xStart - 11.4f;
 			transform.position = a;
 		}
-		if(transform.position.x<startPos.x+11.9f) // Check right limit
+		if(transform.position.x>(xStart+11.4f)) // Check right limit
 		{
+			Debug.Log ("Far Right " + transform.position.x.ToString());
 			Vector3 a = transform.position;
-			a.y = 11.9f;
+			a.x = xStart + 11.4f;
 			transform.position = a;
 		}
+		//else Debug.Log (transform.position.x.ToString() + " > " 
 
 		//lanePos.transform.position = new Vector3(0f, lanePos.transform.position.y, lanePos.transform.position.z);
 		camRef.moveToPosition (transform.position.z);
@@ -152,6 +157,12 @@ public class iceMove : MonoBehaviour {
 	{
 		// Duplicate model, make duplicate do death anim
 		// here
+	
+		if(Application.loadedLevelName=="TrackEditor")
+		{
+			reset();
+			return;
+		}
 
 		enabled = false;
 		forwardSpeed = 0f;
