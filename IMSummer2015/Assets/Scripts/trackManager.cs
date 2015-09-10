@@ -714,6 +714,7 @@ public class trackManager : MonoBehaviour {
 			partMaxDifficulty = (int) usaveRef.varray[0].y;
 			partName = usaveRef.sarray[0];
 			partSegmentNumber = saveNo.ToString();
+			generateTrack();
 		}
 	}
 
@@ -721,7 +722,7 @@ public class trackManager : MonoBehaviour {
 	{
 		float roundTo = 1f;
 		// partParameters[(int)paramReferences[x].w].w
-		for(int x=0;x<partParameters.Length;x++)
+		for(int x=0;x<paramReferences.Length;x++)
 		{
 			partParameters[(int)paramReferences[x].w].w = Mathf.Round(partParameters[(int)paramReferences[x].w].w * (1f / roundTo)) * (roundTo / 1f);
 		}
