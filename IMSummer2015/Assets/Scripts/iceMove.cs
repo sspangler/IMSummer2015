@@ -56,25 +56,44 @@ public class iceMove : MonoBehaviour {
 		transform.Translate(Vector3.forward * forwardSpeed * speedMultiplier * Time.deltaTime);
 		RaycastHit hit;
 		Ray ray = new Ray(head.transform.position, -Vector3.up);
-		
-		bool hitObject = false;
-		//if something under the player
-		if (Physics.Raycast(ray, out hit, 9999f, layers)) 
+
+		//if something is under the player
+		if (Physics.Raycast(ray, out hit, 9999f, layers))
 		{
 			// Move up if im hitting a platform
-			if(hit.distance<bodyLength)
+			if(hit.distance<=bodyLength)
 			{
 				transform.position += new Vector3(0f, bodyLength - hit.distance, 0f);
-				hitObject = true;
+				lastRayDistance = hit.distance;
 			}
 			else
 			{
-				hitObject = false;
+				lastRayDistance = bodyLength + Time.deltaTime;
 			}
-			// Fall (using gravity) if there is no platform close enough
-			lastRayDistance = hit.distance;
 		}
-		else lastRayDistance = bodyLength + 1f;
+		else lastRayDistance = bodyLength + Time.deltaTime;
+
+		float stepHeight = 0.5f;
+		float duckHeight = 0.5f;
+		float span = bodyLength - stepHeight - duckHeight;
+		int rays = 3;
+		float rayspan = span / ((rays*1.0f) - 1f);
+
+		float a, b;
+		a = 1.5f;
+
+		// Check right side
+		for(int x=0;x<rays;x++)
+		{
+			a = returnRayLength(transform.position + new Vector3(0f, 
+			                    bodyLength*0.5f - (duckHeight + (x*rayspan)), 0f), new Vector3(1f,0f,0f), a);
+		}
+
+		// Check left side
+		for(int x=0;x<rays;x++)
+		{
+
+		}
 
 		// Get turning input
 		desiredTurnSpeed = 0f;
@@ -114,16 +133,16 @@ public class iceMove : MonoBehaviour {
 		if(transform.position.x<(xStart-11.4f)) // Check left limit
 		{
 			Debug.Log ("Far Left");
-			Vector3 a = transform.position;
-			a.x = xStart - 11.4f;
-			transform.position = a;
+			Vector3 pos = transform.position;
+			pos.x = xStart - 11.4f;
+			transform.position = pos;
 		}
 		if(transform.position.x>(xStart+11.4f)) // Check right limit
 		{
 			Debug.Log ("Far Right " + transform.position.x.ToString());
-			Vector3 a = transform.position;
-			a.x = xStart + 11.4f;
-			transform.position = a;
+			Vector3 pos = transform.position;
+			pos.x = xStart + 11.4f;
+			transform.position = pos;
 		}
 		//else Debug.Log (transform.position.x.ToString() + " > " 
 
@@ -193,5 +212,18 @@ public class iceMove : MonoBehaviour {
 	public void moveToStart()
 	{
 		transform.position = startPos + GameObject.Find ("InitPart").transform.position;
+	}
+
+	public float returnRayLength(Vector3 position, Vector3 direction, float length = 9999f)
+	{
+		RaycastHit hit;
+		Ray ray = new Ray(position, direction);
+
+		//if something under the player
+		if (Physics.Raycast(ray, out hit, length, layers))
+		{
+			return hit.distance;
+		}
+		return length;
 	}
 }
