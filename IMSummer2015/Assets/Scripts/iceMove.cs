@@ -79,20 +79,30 @@ public class iceMove : MonoBehaviour {
 		int rays = 3;
 		float rayspan = span / ((rays*1.0f) - 1f);
 
-		float a, b;
-		a = 1.5f;
-
+		float a;
+		float rayLength = 50f;
+		float halfBody = 0.75f;
+		float maxRight = (xStart+11.4f);
+		float maxLeft = (xStart-11.4f);
+		
 		// Check right side
 		for(int x=0;x<rays;x++)
 		{
 			a = returnRayLength(transform.position + new Vector3(0f, 
-			                    bodyLength*0.5f - (duckHeight + (x*rayspan)), 0f), new Vector3(1f,0f,0f), a);
+			                     bodyLength*0.5f - (duckHeight + (x*rayspan)), 0f), new Vector3(1f,0f,0f), rayLength);
+			a += transform.position.x - halfBody;
+			if(a<maxRight)
+				maxRight = a;
 		}
-
+		
 		// Check left side
 		for(int x=0;x<rays;x++)
 		{
-
+			a = returnRayLength(transform.position + new Vector3(0f, 
+			                     bodyLength*0.5f - (duckHeight + (x*rayspan)), 0f), new Vector3(-1f,0f,0f), rayLength);
+			a = transform.position.x - a + halfBody;
+			if(a>maxLeft)
+				maxLeft = a;
 		}
 
 		// Get turning input
@@ -127,24 +137,21 @@ public class iceMove : MonoBehaviour {
 					currentTurnSpeed = Mathf.Sign (currentTurnSpeed) * turnSpeed;
 			}
 		}
-
+		
 		//Apply turning
-		transform.Translate (Vector3.right * currentTurnSpeed * Time.deltaTime);
-		if(transform.position.x<(xStart-11.4f)) // Check left limit
+		transform.Translate (((Vector3.right * currentTurnSpeed)) * Time.deltaTime);
+		if(transform.position.x<maxLeft) // Check left limit
 		{
-			Debug.Log ("Far Left");
 			Vector3 pos = transform.position;
-			pos.x = xStart - 11.4f;
+			pos.x = maxLeft;
 			transform.position = pos;
 		}
-		if(transform.position.x>(xStart+11.4f)) // Check right limit
+		if(transform.position.x>maxRight) // Check right limit
 		{
-			Debug.Log ("Far Right " + transform.position.x.ToString());
 			Vector3 pos = transform.position;
-			pos.x = xStart + 11.4f;
+			pos.x = maxRight;
 			transform.position = pos;
 		}
-		//else Debug.Log (transform.position.x.ToString() + " > " 
 
 		//lanePos.transform.position = new Vector3(0f, lanePos.transform.position.y, lanePos.transform.position.z);
 		camRef.moveToPosition (transform.position.z);
@@ -222,6 +229,7 @@ public class iceMove : MonoBehaviour {
 		//if something under the player
 		if (Physics.Raycast(ray, out hit, length, layers))
 		{
+			Debug.Log(hit.collider.gameObject.name);
 			return hit.distance;
 		}
 		return length;
